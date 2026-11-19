@@ -33,8 +33,6 @@
       border-radius: 5px;
       box-shadow: 0 12px 35px #77654b20;
       text-align: center;
-      position: relative;
-      overflow: hidden;
     }
 
     .ornament {
@@ -63,7 +61,6 @@
       width: 100%;
       max-width: 310px;
       height: 175px;
-      position: relative;
       perspective: 900px;
     }
 
@@ -148,7 +145,7 @@
       font-size: 15px;
       letter-spacing: 2px;
       cursor: pointer;
-      transition: background 0.2s, transform 0.2s;
+      transition: background 0.2s;
     }
 
     button:hover {
@@ -164,6 +161,7 @@
       margin-top: 14px;
       color: #a79780;
       font-size: 11px;
+      line-height: 1.8;
     }
 
     .result {
@@ -173,11 +171,11 @@
       border: 1px solid #dfd1bd;
       background: #fffdf8;
       border-radius: 5px;
-      animation: appear 0.8s ease both;
     }
 
     .result.show {
       display: block;
+      animation: appear 0.8s ease both;
     }
 
     .result-label {
@@ -208,7 +206,7 @@
     }
 
     .notice {
-      margin-top: 22px;
+      margin-top: 18px;
       color: #8e7b63;
       font-size: 13px;
       line-height: 1.8;
@@ -221,6 +219,7 @@
     }
 
     .again:hover {
+      background: #806b50;
       color: white;
     }
 
@@ -246,6 +245,7 @@
       .page {
         padding: 30px 19px;
       }
+
       .book {
         height: 150px;
       }
@@ -262,6 +262,7 @@
 
 <body>
   <main class="page">
+
     <div class="ornament">✦ ───── ✦</div>
 
     <h1>The Book of &TEAM</h1>
@@ -288,7 +289,7 @@
       placeholder="在這裡寫下你的煩惱……"
     ></textarea>
 
-    <button id="drawButton" type="button" onclick="drawQuote()">
+    <button id="drawButton" type="button">
       ✦ 打開這本書 ✦
     </button>
 
@@ -301,7 +302,8 @@
       <div class="member" id="member"></div>
       <div class="original" id="original"></div>
       <div class="translation" id="translation"></div>
-      <button class="again" type="button" onclick="drawQuote()">
+
+      <button class="again" id="againButton" type="button">
         再抽一次 ✦
       </button>
     </section>
@@ -309,63 +311,82 @@
     <footer>
       MADE WITH LOVE FOR LUNÉ
     </footer>
+
   </main>
-  
-<script src="quotes.js"></script>
-<script>
- 
-   
+
+  <!-- 先載入獨立語錄資料庫 -->
+  <script src="quotes.js"></script>
+
+  <!-- 再執行網站功能 -->
+  <script>
+    const drawButton = document.getElementById("drawButton");
+    const againButton = document.getElementById("againButton");
+    const question = document.getElementById("question");
+    const book = document.getElementById("book");
+    const result = document.getElementById("result");
+
     let drawing = false;
 
     function drawQuote() {
-<script>
       if (drawing) return;
 
-      const question = document.getElementById("question");
-      const book = document.getElementById("book");
-      const result = document.getElementById("result");
-      const button = document.getElementById("drawButton");
+      // 取得 quotes.js 裡的語錄
+      const quotes = Array.isArray(window.quotes)
+        ? window.quotes
+        : [];
 
-      // 不保存煩惱，點擊後立即清空輸入框。
+      // 立即清除煩惱，不讀取、不保存內容
       question.value = "";
 
       result.classList.remove("show");
 
+      // 確認語錄資料有沒有載入
       if (quotes.length === 0) {
-        book.classList.add("opening");
-        button.disabled = true;
-        button.textContent = "正在翻開書頁……";
+        document.getElementById("member").textContent = "";
+        document.getElementById("original").textContent =
+          "目前還沒有可抽取的語錄。";
+        document.getElementById("translation").textContent =
+          "請確認 quotes.js 是否已經加入語錄。";
 
-        setTimeout(() => {
-          book.classList.remove("opening");
-          result.innerHTML = `
-            <div class="result-label">A LITTLE NOTE</div>
-            <p class="notice">
-              語錄資料正在整理中。<br>
-              等待真正的 &TEAM 語錄加入後，<br>
-              就可以開始抽取了 ✦
-            </p>
-          `;
-          result.classList.add("show");
-          button.disabled = false;
-          button.textContent = "✦ 再試一次 ✦";
-        }, 900);
+        result.classList.add("show");
+        return;
+      }
 
+      // 確認每筆資料都有必要欄位
+      const validQuotes = quotes.filter(quote =>
+        quote &&
+        typeof quote.member === "string" &&
+        typeof quote.original === "string" &&
+        typeof quote.translation === "string" &&
+        quote.member.trim() !== "" &&
+        quote.original.trim() !== "" &&
+        quote.translation.trim() !== ""
+      );
+
+      if (validQuotes.length === 0) {
+        document.getElementById("member").textContent = "";
+        document.getElementById("original").textContent =
+          "語錄資料格式有誤。";
+        document.getElementById("translation").textContent =
+          "請檢查 quotes.js 的內容。";
+
+        result.classList.add("show");
         return;
       }
 
       drawing = true;
-      button.disabled = true;
-      button.textContent = "正在翻開書頁……";
+      drawButton.disabled = true;
+      againButton.disabled = true;
+      drawButton.textContent = "正在翻開書頁……";
 
       book.classList.add("opening");
 
       setTimeout(() => {
         const randomIndex = Math.floor(
-          Math.random() * quotes.length
+          Math.random() * validQuotes.length
         );
 
-        const quote = quotes[randomIndex];
+        const quote = validQuotes[randomIndex];
 
         document.getElementById("member").textContent =
           quote.member;
@@ -379,11 +400,16 @@
         result.classList.add("show");
         book.classList.remove("opening");
 
-        button.disabled = false;
-        button.textContent = "✦ 打開這本書 ✦";
+        drawButton.disabled = false;
+        againButton.disabled = false;
+        drawButton.textContent = "✦ 打開這本書 ✦";
+
         drawing = false;
       }, 900);
     }
+
+    drawButton.addEventListener("click", drawQuote);
+    againButton.addEventListener("click", drawQuote);
   </script>
 </body>
 </html>
