@@ -1,11 +1,11 @@
 
-const quotes = [
+window.quotes = [
   {
     member: "YUMA",
     language: "ja",
     original: "僕も応援してるよ",
     translation: "我也會為你應援",
-    source: "DM"
+    source: "DM（測試資料）"
   },
   {
     member: "&TEAM",
