@@ -1,11 +1,11 @@
-
+;
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="一本收集 &TEAM 真實語錄的解答之書。">
-  <title>The Book of &TEAM</title>
+  <title>オオカミのお悩み相談所</title>
 
   <style>
     * {
@@ -53,20 +53,14 @@
       color: #98856c;
       font-size: 13px;
       line-height: 1.9;
-      margin-bottom: 28px;
-    }
-
-    .book {
-      margin: 0 auto 28px;
-      width: 100%;
-      max-width: 310px;
-      height: 175px;
-      perspective: 900px;
+      margin-bottom: 30px;
     }
 
     .book-cover {
       width: 100%;
-      height: 100%;
+      max-width: 310px;
+      height: 175px;
+      margin: 0 auto 30px;
       background: linear-gradient(135deg, #a48b6c, #78634d);
       border: 5px double #d9c7a8;
       border-radius: 4px 12px 12px 4px;
@@ -76,9 +70,6 @@
       justify-content: center;
       align-items: center;
       color: #fff6e6;
-      transition: transform 0.8s ease;
-      transform-origin: left center;
-      backface-visibility: hidden;
     }
 
     .book-cover span:first-child {
@@ -97,10 +88,6 @@
       margin-top: 15px;
       font-size: 12px;
       letter-spacing: 2px;
-    }
-
-    .book.opening .book-cover {
-      transform: rotateY(-115deg);
     }
 
     .question-label {
@@ -145,7 +132,6 @@
       font-size: 15px;
       letter-spacing: 2px;
       cursor: pointer;
-      transition: background 0.2s;
     }
 
     button:hover {
@@ -153,7 +139,7 @@
     }
 
     button:disabled {
-      opacity: 0.65;
+      opacity: 0.6;
       cursor: wait;
     }
 
@@ -164,18 +150,20 @@
       line-height: 1.8;
     }
 
-    .result {
+    .screen {
       display: none;
-      margin-top: 26px;
-      padding: 25px 18px;
+    }
+
+    .screen.active {
+      display: block;
+    }
+
+    .result-card {
+      margin-top: 12px;
+      padding: 35px 20px;
       border: 1px solid #dfd1bd;
       background: #fffdf8;
       border-radius: 5px;
-    }
-
-    .result.show {
-      display: block;
-      animation: appear 0.8s ease both;
     }
 
     .result-label {
@@ -185,42 +173,48 @@
     }
 
     .member {
-      margin: 13px 0 20px;
-      font-size: 22px;
-      letter-spacing: 3px;
+      margin: 20px 0 26px;
+      font-size: 25px;
+      letter-spacing: 4px;
     }
 
     .original {
-      font-size: 19px;
-      line-height: 1.8;
-      margin: 15px 0;
+      font-size: 21px;
+      line-height: 1.9;
+      margin: 20px 0;
       overflow-wrap: anywhere;
     }
 
     .translation {
-      font-size: 14px;
-      line-height: 1.9;
+      font-size: 15px;
+      line-height: 2;
       color: #8e7b63;
-      margin-top: 15px;
+      margin-top: 20px;
       overflow-wrap: anywhere;
     }
 
-    .notice {
-      margin-top: 18px;
-      color: #8e7b63;
-      font-size: 13px;
+    .source {
+      margin-top: 25px;
+      color: #b3a38c;
+      font-size: 11px;
       line-height: 1.8;
     }
 
-    .again {
+    .back-button {
       background: transparent;
       border: 1px solid #b8a58a;
       color: #806b50;
     }
 
-    .again:hover {
-      background: #806b50;
+    .back-button:hover {
       color: white;
+    }
+
+    .message {
+      color: #8e7b63;
+      font-size: 14px;
+      line-height: 1.9;
+      margin: 20px 0;
     }
 
     footer {
@@ -230,31 +224,13 @@
       letter-spacing: 1px;
     }
 
-    @keyframes appear {
-      from {
-        opacity: 0;
-        transform: translateY(12px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
     @media (max-width: 420px) {
       .page {
         padding: 30px 19px;
       }
 
-      .book {
+      .book-cover {
         height: 150px;
-      }
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      *, *::before, *::after {
-        animation-duration: 0.01ms !important;
-        transition-duration: 0.01ms !important;
       }
     }
   </style>
@@ -263,96 +239,119 @@
 <body>
   <main class="page">
 
-    <div class="ornament">✦ ───── ✦</div>
+    <!-- 第一頁：輸入煩惱 -->
+    <section id="inputScreen" class="screen active">
 
-    <h1>The Book of &TEAM</h1>
+      <div class="ornament">✦ ───── ✦</div>
 
-    <div class="subtitle">
-      あなたへの小さなメッセージ。<br>
-      或許有些話，正好是現在的你需要聽見的。
-    </div>
+      <h1>The Book of &TEAM</h1>
 
-    <div class="book" id="book">
+      <div class="subtitle">
+        有煩惱的話就交給狼管家<br>
+        讓他幫你翻翻解答之書
+			</div>
+
       <div class="book-cover">
         <span>A LITTLE BOOK</span>
         <strong>&TEAM</strong>
         <span>FOR YOU ♡</span>
       </div>
-    </div>
 
-    <label class="question-label" for="question">
-      現在有什麼事情放在心上呢？
-    </label>
+      <label class="question-label" for="question">
+        請在心裡默念想問的問題
+      </label>
 
-    <textarea
-      id="question"
-      placeholder="在這裡寫下你的煩惱……"
-    ></textarea>
+      <textarea
+        id="question"
+        placeholder="或是這裡寫下你的煩惱……"
+      ></textarea>
 
-    <button id="drawButton" type="button">
-      ✦ 打開這本書 ✦
-    </button>
-
-    <div class="privacy">
-      你的煩惱只會留在目前的畫面，不會被保存或傳送。
-    </div>
-
-    <section class="result" id="result" aria-live="polite">
-      <div class="result-label">YOUR MESSAGE</div>
-      <div class="member" id="member"></div>
-      <div class="original" id="original"></div>
-      <div class="translation" id="translation"></div>
-
-      <button class="again" id="againButton" type="button">
-        再抽一次 ✦
+      <button id="drawButton" type="button">
+        ✦ 占卜 ✦
       </button>
+
+      <div class="privacy">
+        ＊煩惱只會留在這個畫面，後台也看不見＊
+      </div>
+
+    </section>
+
+
+    <!-- 第二頁：顯示抽出的語錄 -->
+    <section id="resultScreen" class="screen">
+
+      <div class="ornament">✦ ───── ✦</div>
+
+      <div class="result-label">YOUR MESSAGE</div>
+
+      <div class="result-card">
+
+        <div class="member" id="member"></div>
+
+        <div class="original" id="original"></div>
+
+        <div class="translation" id="translation"></div>
+
+        <div class="source" id="source"></div>
+
+      </div>
+
+      <button id="againButton" type="button">
+        ✦ 再抽一次 ✦
+      </button>
+
+      <button id="backButton" class="back-button" type="button">
+        回到首頁
+      </button>
+
     </section>
 
     <footer>
-      MADE WITH LOVE FOR LUNÉ
+      4th anniversary
     </footer>
 
   </main>
 
-  <!-- 先載入獨立語錄資料庫 -->
+
+  <!-- 載入語錄資料 -->
   <script src="quotes.js"></script>
 
-  <!-- 再執行網站功能 -->
   <script>
+    const inputScreen = document.getElementById("inputScreen");
+    const resultScreen = document.getElementById("resultScreen");
+
+    const question = document.getElementById("question");
+
     const drawButton = document.getElementById("drawButton");
     const againButton = document.getElementById("againButton");
-    const question = document.getElementById("question");
-    const book = document.getElementById("book");
-    const result = document.getElementById("result");
+    const backButton = document.getElementById("backButton");
 
     let drawing = false;
 
+    // 切換畫面
+    function showScreen(screen) {
+      inputScreen.classList.remove("active");
+      resultScreen.classList.remove("active");
+
+      screen.classList.add("active");
+
+      window.scrollTo({
+        top: 0,
+        behavior: "auto"
+      });
+    }
+
+    // 抽取語錄
     function drawQuote() {
       if (drawing) return;
 
-      // 取得 quotes.js 裡的語錄
       const quotes = Array.isArray(window.quotes)
         ? window.quotes
         : [];
 
-      // 立即清除煩惱，不讀取、不保存內容
+      // 清空輸入內容，不保存煩惱
       question.value = "";
 
-      result.classList.remove("show");
-
-      // 確認語錄資料有沒有載入
-      if (quotes.length === 0) {
-        document.getElementById("member").textContent = "";
-        document.getElementById("original").textContent =
-          "目前還沒有可抽取的語錄。";
-        document.getElementById("translation").textContent =
-          "請確認 quotes.js 是否已經加入語錄。";
-
-        result.classList.add("show");
-        return;
-      }
-
-      // 確認每筆資料都有必要欄位
       const validQuotes = quotes.filter(quote =>
         quote &&
         typeof quote.member === "string" &&
@@ -363,53 +362,62 @@
         quote.translation.trim() !== ""
       );
 
-      if (validQuotes.length === 0) {
-        document.getElementById("member").textContent = "";
-        document.getElementById("original").textContent =
-          "語錄資料格式有誤。";
-        document.getElementById("translation").textContent =
-          "請檢查 quotes.js 的內容。";
+      const member = document.getElementById("member");
+      const original = document.getElementById("original");
+      const translation = document.getElementById("translation");
+      const source = document.getElementById("source");
 
-        result.classList.add("show");
+      // 沒有語錄或資料格式錯誤
+      if (validQuotes.length === 0) {
+        member.textContent = "";
+        original.textContent = "目前沒有可抽取的語錄。";
+        translation.textContent =
+          "請確認 quotes.js 是否已經正確加入語錄。";
+        source.textContent = "";
+
+        showScreen(resultScreen);
         return;
       }
 
       drawing = true;
       drawButton.disabled = true;
       againButton.disabled = true;
-      drawButton.textContent = "正在翻開書頁……";
 
-      book.classList.add("opening");
+      // 隨機抽取一筆
+      const randomIndex = Math.floor(
+        Math.random() * validQuotes.length
+      );
 
-      setTimeout(() => {
-        const randomIndex = Math.floor(
-          Math.random() * validQuotes.length
-        );
+      const quote = validQuotes[randomIndex];
 
-        const quote = validQuotes[randomIndex];
+      member.textContent = quote.member;
+      original.textContent = "「" + quote.original + "」";
+      translation.textContent = quote.translation;
 
-        document.getElementById("member").textContent =
-          quote.member;
+      // 出處只在資料存在時顯示
+      source.textContent = quote.source
+        ? "Source: " + quote.source
+        : "";
 
-        document.getElementById("original").textContent =
-          "「" + quote.original + "」";
+      // 直接切換到第二頁，沒有翻頁動畫
+      showScreen(resultScreen);
 
-        document.getElementById("translation").textContent =
-          quote.translation;
-
-        result.classList.add("show");
-        book.classList.remove("opening");
-
-        drawButton.disabled = false;
-        againButton.disabled = false;
-        drawButton.textContent = "✦ 打開這本書 ✦";
-
-        drawing = false;
-      }, 900);
+      drawing = false;
+      drawButton.disabled = false;
+      againButton.disabled = false;
     }
 
     drawButton.addEventListener("click", drawQuote);
+
+    // 再抽一次：直接在第二頁抽新語錄
     againButton.addEventListener("click", drawQuote);
+
+    // 返回第一頁
+    backButton.addEventListener("click", () => {
+      question.value = "";
+      showScreen(inputScreen);
+    });
   </script>
+
 </body>
 </html>
