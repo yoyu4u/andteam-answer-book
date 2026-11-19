@@ -1,18 +1,16 @@
 
-const quotes = [
-  /*
-    在這裡新增真正的 &TEAM 語錄。
+const quotes = [{
+  member: "YUMA",
+  language: "ja",
+  original: "僕も応援してるよ",
+  translation: "我也會為你應援",
+  source: "DM"
+}
+];
 
-    格式：
-
-    {
-      member: "YUMA",
-      language: "ja",
-      original: "日文原話",
-      translation: "繁體中文翻譯",
-      source: "影片名稱、日期或時間戳"
-    },
-
-    韓文語錄則將 language 設為 "ko"。
-  */
+const quotes = [member: "＆team",
+  language: "en",
+  original: "We're doing the impossible",
+  translation: "",
+  source: "The Final Countdown"
 ];
