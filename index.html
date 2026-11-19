@@ -4,33 +4,392 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="一本收集 &TEAM 真實語錄的解答之書。">
   <title>The Book of &TEAM</title>
+
   <style>
+    * {
+      box-sizing: border-box;
+    }
+
     body {
-      background: #f3ecdf;
-      color: #574936;
-      font-family: Georgia, serif;
+      margin: 0;
+      min-height: 100vh;
+      padding: 36px 18px;
+      background: #eee5d6;
+      color: #594b3b;
+      font-family: Georgia, "Noto Serif TC", serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .page {
+      width: 100%;
+      max-width: 540px;
+      padding: 38px 28px;
+      background: #fbf7ee;
+      border: 1px solid #d8c9b2;
+      border-radius: 5px;
+      box-shadow: 0 12px 35px #77654b20;
       text-align: center;
-      padding: 60px 20px;
+      position: relative;
+      overflow: hidden;
     }
-    main {
-      max-width: 500px;
-      margin: auto;
-      padding: 40px 24px;
-      background: #fffaf0;
-      border: 1px solid #d8c8ad;
-      border-radius: 12px;
+
+    .ornament {
+      color: #aa9271;
+      letter-spacing: 7px;
+      font-size: 13px;
+      margin-bottom: 18px;
     }
-    h1 { font-size: 32px; }
-    p { line-height: 1.8; }
+
+    h1 {
+      font-size: clamp(27px, 7vw, 38px);
+      font-weight: normal;
+      letter-spacing: 2px;
+      margin: 0 0 12px;
+    }
+
+    .subtitle {
+      color: #98856c;
+      font-size: 13px;
+      line-height: 1.9;
+      margin-bottom: 28px;
+    }
+
+    .book {
+      margin: 0 auto 28px;
+      width: 100%;
+      max-width: 310px;
+      height: 175px;
+      position: relative;
+      perspective: 900px;
+    }
+
+    .book-cover {
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, #a48b6c, #78634d);
+      border: 5px double #d9c7a8;
+      border-radius: 4px 12px 12px 4px;
+      box-shadow: 5px 7px 12px #51412d30;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      color: #fff6e6;
+      transition: transform 0.8s ease;
+      transform-origin: left center;
+      backface-visibility: hidden;
+    }
+
+    .book-cover span:first-child {
+      font-size: 13px;
+      letter-spacing: 4px;
+      margin-bottom: 12px;
+    }
+
+    .book-cover strong {
+      font-size: 25px;
+      font-weight: normal;
+      letter-spacing: 3px;
+    }
+
+    .book-cover span:last-child {
+      margin-top: 15px;
+      font-size: 12px;
+      letter-spacing: 2px;
+    }
+
+    .book.opening .book-cover {
+      transform: rotateY(-115deg);
+    }
+
+    .question-label {
+      display: block;
+      text-align: left;
+      font-size: 14px;
+      margin-bottom: 10px;
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 115px;
+      resize: vertical;
+      padding: 14px;
+      border: 1px solid #d9cbb7;
+      border-radius: 5px;
+      background: #fffdf8;
+      color: #594b3b;
+      font-family: inherit;
+      font-size: 15px;
+      line-height: 1.7;
+      outline: none;
+    }
+
+    textarea:focus {
+      border-color: #a48b6c;
+    }
+
+    textarea::placeholder {
+      color: #b8aa96;
+    }
+
+    button {
+      width: 100%;
+      margin-top: 18px;
+      padding: 15px;
+      border: none;
+      border-radius: 4px;
+      background: #806b50;
+      color: #fffaf0;
+      font-family: inherit;
+      font-size: 15px;
+      letter-spacing: 2px;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.2s;
+    }
+
+    button:hover {
+      background: #68543d;
+    }
+
+    button:disabled {
+      opacity: 0.65;
+      cursor: wait;
+    }
+
+    .privacy {
+      margin-top: 14px;
+      color: #a79780;
+      font-size: 11px;
+    }
+
+    .result {
+      display: none;
+      margin-top: 26px;
+      padding: 25px 18px;
+      border: 1px solid #dfd1bd;
+      background: #fffdf8;
+      border-radius: 5px;
+      animation: appear 0.8s ease both;
+    }
+
+    .result.show {
+      display: block;
+    }
+
+    .result-label {
+      color: #a48b6c;
+      font-size: 11px;
+      letter-spacing: 3px;
+    }
+
+    .member {
+      margin: 13px 0 20px;
+      font-size: 22px;
+      letter-spacing: 3px;
+    }
+
+    .original {
+      font-size: 19px;
+      line-height: 1.8;
+      margin: 15px 0;
+      overflow-wrap: anywhere;
+    }
+
+    .translation {
+      font-size: 14px;
+      line-height: 1.9;
+      color: #8e7b63;
+      margin-top: 15px;
+      overflow-wrap: anywhere;
+    }
+
+    .notice {
+      margin-top: 22px;
+      color: #8e7b63;
+      font-size: 13px;
+      line-height: 1.8;
+    }
+
+    .again {
+      background: transparent;
+      border: 1px solid #b8a58a;
+      color: #806b50;
+    }
+
+    .again:hover {
+      color: white;
+    }
+
+    footer {
+      margin-top: 30px;
+      color: #b3a38c;
+      font-size: 11px;
+      letter-spacing: 1px;
+    }
+
+    @keyframes appear {
+      from {
+        opacity: 0;
+        transform: translateY(12px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (max-width: 420px) {
+      .page {
+        padding: 30px 19px;
+      }
+      .book {
+        height: 150px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
   </style>
 </head>
+
 <body>
-  <main>
+  <main class="page">
+    <div class="ornament">✦ ───── ✦</div>
+
     <h1>The Book of &TEAM</h1>
-    <p>あなたへの小さなメッセージ。</p>
-    <p>有些話，或許正好是現在的你需要聽見的。</p>
-    <p>網站正在準備中 ✦</p>
+
+    <div class="subtitle">
+      あなたへの小さなメッセージ。<br>
+      或許有些話，正好是現在的你需要聽見的。
+    </div>
+
+    <div class="book" id="book">
+      <div class="book-cover">
+        <span>A LITTLE BOOK</span>
+        <strong>&TEAM</strong>
+        <span>FOR YOU ♡</span>
+      </div>
+    </div>
+
+    <label class="question-label" for="question">
+      現在有什麼事情放在心上呢？
+    </label>
+
+    <textarea
+      id="question"
+      placeholder="在這裡寫下你的煩惱……"
+    ></textarea>
+
+    <button id="drawButton" type="button" onclick="drawQuote()">
+      ✦ 打開這本書 ✦
+    </button>
+
+    <div class="privacy">
+      你的煩惱只會留在目前的畫面，不會被保存或傳送。
+    </div>
+
+    <section class="result" id="result" aria-live="polite">
+      <div class="result-label">YOUR MESSAGE</div>
+      <div class="member" id="member"></div>
+      <div class="original" id="original"></div>
+      <div class="translation" id="translation"></div>
+      <button class="again" type="button" onclick="drawQuote()">
+        再抽一次 ✦
+      </button>
+    </section>
+
+    <footer>
+      MADE WITH LOVE FOR LUNÉ
+    </footer>
   </main>
+
+  <script>
+    // 在這裡加入已核對的真實成員語錄。
+    // 每句格式：成員、原文、繁體中文翻譯。
+    const quotes = [
+      // {
+      //   member: "YUMA",
+      //   original: "請填入已核對的日文原話",
+      //   translation: "請填入繁體中文翻譯"
+      // }
+    ];
+
+    let drawing = false;
+
+    function drawQuote() {
+      if (drawing) return;
+
+      const question = document.getElementById("question");
+      const book = document.getElementById("book");
+      const result = document.getElementById("result");
+      const button = document.getElementById("drawButton");
+
+      // 不保存煩惱，點擊後立即清空輸入框。
+      question.value = "";
+
+      result.classList.remove("show");
+
+      if (quotes.length === 0) {
+        book.classList.add("opening");
+        button.disabled = true;
+        button.textContent = "正在翻開書頁……";
+
+        setTimeout(() => {
+          book.classList.remove("opening");
+          result.innerHTML = `
+            <div class="result-label">A LITTLE NOTE</div>
+            <p class="notice">
+              語錄資料正在整理中。<br>
+              等待真正的 &TEAM 語錄加入後，<br>
+              就可以開始抽取了 ✦
+            </p>
+          `;
+          result.classList.add("show");
+          button.disabled = false;
+          button.textContent = "✦ 再試一次 ✦";
+        }, 900);
+
+        return;
+      }
+
+      drawing = true;
+      button.disabled = true;
+      button.textContent = "正在翻開書頁……";
+
+      book.classList.add("opening");
+
+      setTimeout(() => {
+        const randomIndex = Math.floor(
+          Math.random() * quotes.length
+        );
+
+        const quote = quotes[randomIndex];
+
+        document.getElementById("member").textContent =
+          quote.member;
+
+        document.getElementById("original").textContent =
+          "「" + quote.original + "」";
+
+        document.getElementById("translation").textContent =
+          quote.translation;
+
+        result.classList.add("show");
+        book.classList.remove("opening");
+
+        button.disabled = false;
+        button.textContent = "✦ 打開這本書 ✦";
+        drawing = false;
+      }, 900);
+    }
+  </script>
 </body>
 </html>
